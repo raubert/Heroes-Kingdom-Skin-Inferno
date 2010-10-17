@@ -1,0 +1,37 @@
+<project name="Heroes Kingdom Evolution" default="all" basedir=".">
+
+	<property name="version" value="1.0" />
+
+	<property name="src" location="src" />
+	<property name="src.js" location="${src}/js" />
+	<property name="src.css" location="${src}/css" />
+
+	<target name="all">
+		<property name="target" value="mmhk.skin.inferno.user.js" />
+		<delete file="${target}" />
+
+		<concat destfile="tmp.css">
+			<filelist dir="${src.css}">
+				<file name="mmhk.skin.inferno.background.css" />
+				<file name="mmhk.skin.inferno.css" />
+			</filelist>
+		</concat>
+		<replaceregexp match="\t|\n" replace="" flags="g" file="tmp.css" />
+
+		<concat destfile="${target}">
+			<filelist dir=".">
+				<file name="${src.js}/mmhk.skin.inferno.intro.js" />
+				<file name="tmp.css" />
+				<file name="${src.js}/mmhk.skin.inferno.outro.js" />
+			</filelist>
+		</concat>
+		<delete file="tmp.css" />
+
+		<replaceregexp match="@VERSION" replace="${version}" byline="true" file="${target}" />
+		<tstamp>
+			<format property="now" pattern="d-MMMM-yyyy hh:mm aa z" locale="en,US" />
+		</tstamp>
+		<replaceregexp match="@DATE" replace="Date: ${now}" byline="true" file="${target}" />
+	</target>
+
+</project>
