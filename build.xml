@@ -5,18 +5,31 @@
 	<property name="src" location="src" />
 	<property name="src.js" location="${src}/js" />
 	<property name="src.css" location="${src}/css" />
+	<property name="target" value="mmhk.skin.inferno.user.js" />
+
+	<macrodef name="compress">
+		<attribute name="file" />
+		<attribute name="type" />
+		<sequential>
+			<java jar="yuicompressor-2.4.2.jar" fork="true">
+				<arg value="--type" />
+				<arg value="@{type}" />
+				<arg value="-o" />
+				<arg value="@{file}" />
+				<arg value="@{file}" />
+			</java>
+		</sequential>
+	</macrodef>
+
+	<target name="deploy" depends="all">
+		<copy file="${target}" todir="../../Public Html/MMHK/www/" />
+	</target>
 
 	<target name="all">
-		<property name="target" value="mmhk.skin.inferno.user.js" />
 		<delete file="${target}" />
 
-		<concat destfile="tmp.css">
-			<filelist dir="${src.css}">
-				<file name="mmhk.skin.inferno.background.css" />
-				<file name="mmhk.skin.inferno.css" />
-			</filelist>
-		</concat>
-		<replaceregexp match="\t|\n" replace="" flags="g" file="tmp.css" />
+		<copy file="${src.css}/mmhk.skin.inferno.css" tofile="tmp.css" />
+		<compress file="tmp.css" type="css" />
 
 		<concat destfile="${target}">
 			<filelist dir=".">
